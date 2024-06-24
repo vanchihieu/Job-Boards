@@ -1,5 +1,7 @@
 package vn.hoidanit.jobhunter.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import vn.hoidanit.jobhunter.domain.User;
@@ -15,32 +17,36 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/user")
-    public User createNewUser(@RequestBody User postManUser) {
+    @PostMapping("/users")
+    public ResponseEntity<User> createNewUser(@RequestBody User postManUser) {
         // @RequestBody dùng để chuyển đổi dữ liệu từ JSON sang Object
-        User user = this.userService.handleCreateUser(postManUser);
+        User users = this.userService.handleCreateUser(postManUser);
 
-        return user;
+        return ResponseEntity.status(HttpStatus.CREATED).body(users);
     }
 
-    @DeleteMapping("/user/{id}")
-    public void deleteUser(@PathVariable long id) {
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable long id) {
         this.userService.handleDeleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/{id}")
-    public User getUserById(@PathVariable long id) {
-        return this.userService.handleGetUser(id);
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable long id) {
+        User users = this.userService.handleGetUser(id);
+        return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/user")
-    public List<User> getAllUsers() {
-        return this.userService.handleGetAllUsers();
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = this.userService.handleGetAllUsers();
+        return ResponseEntity.ok(users);
     }
 
-    @PutMapping("/user/{id}")
-    public User updateUser(@RequestBody User postManUser) {
-        User user = this.userService.handleUpdateUser(postManUser);
-        return user;
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@RequestBody User postManUser) {
+        User users = this.userService.handleUpdateUser(postManUser);
+        return ResponseEntity.ok(users);
     }
 }
