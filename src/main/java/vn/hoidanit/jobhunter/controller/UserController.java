@@ -1,9 +1,6 @@
 package vn.hoidanit.jobhunter.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.service.UserService;
@@ -16,11 +13,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/user/create")
+    @PostMapping("/user")
     public User createNewUser(@RequestBody User postManUser) {
-        // @RequestBody dùng để server nhận dữ liệu từ client gửi lên
+        // @RequestBody dùng để chuyển đổi dữ liệu từ JSON sang Object
         User user = this.userService.handleCreateUser(postManUser);
 
         return user;
+    }
+
+    @DeleteMapping("/user/{id}")
+    public void deleteUser(@PathVariable long id) {
+        this.userService.handleDeleteUser(id);
     }
 }
