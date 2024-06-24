@@ -31,4 +31,14 @@ public class UserService {
     public List<User> handleGetAllUsers() {
         return this.userRepository.findAll();
     }
+
+    public User handleUpdateUser(User user) {
+        User userToUpdate = this.handleGetUser(user.getId());
+        if(userToUpdate != null){
+            userToUpdate.setName(user.getName());
+            userToUpdate.setEmail(user.getEmail());
+            userToUpdate.setPassword(user.getPassword());
+        }
+        return this.userRepository.save(userToUpdate);
+    }
 }

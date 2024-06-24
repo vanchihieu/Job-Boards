@@ -37,4 +37,10 @@ public class UserController {
     public List<User> getAllUsers() {
         return this.userService.handleGetAllUsers();
     }
+
+    @PutMapping("/user/{id}")
+    public User updateUser(@RequestBody User postManUser) {
+        User user = this.userService.handleUpdateUser(postManUser);
+        return user;
+    }
 }
