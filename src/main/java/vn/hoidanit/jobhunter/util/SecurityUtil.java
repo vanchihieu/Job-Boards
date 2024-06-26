@@ -19,7 +19,11 @@ import com.nimbusds.jose.util.Base64;
 
 @Service
 public class SecurityUtil {
-
+//    JWT được cấu tạo từ 3 thành phần: header.payload.signature
+//    1. header => encode dưới dạng base64
+//    2. payload (thông tin data chứa trong token) => encode dưới dạng base64
+//    3. Signature (chữ ký) => được tạo nên từ thuật toán mã hóa + (header + payload) + key
+//            (mật khẩu) dưới dạng base64
     private final JwtEncoder jwtEncoder; // dùng để mã hóa JWT
 
     public SecurityUtil(JwtEncoder jwtEncoder) {
