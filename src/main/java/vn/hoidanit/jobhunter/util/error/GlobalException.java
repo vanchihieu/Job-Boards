@@ -17,19 +17,21 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalException {
     @ExceptionHandler(value = {
-            IdInvalidException.class,
             UsernameNotFoundException.class,
             BadCredentialsException.class
     })
-    public ResponseEntity<RestResponse<Object>> handleIdException(IdInvalidException idException) {
+    // UsernameNotFoundException là một exception được ném ra khi không tìm thấy username trong hệ thống
+    // BadCredentialsException là một exception được ném ra khi password không đúng
+    public ResponseEntity<RestResponse<Object>> handleIdException(Exception ex) {
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        res.setError(idException.getMessage());
-        res.setMessage("IdInvalidException");
+        res.setError(ex.getMessage());
+        res.setMessage("Exception occurs...");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+
+    @ExceptionHandler(MethodArgumentNotValidException.class) // MethodArgumentNotValidException là một exception được ném ra khi dữ liệu không hợp lệ
     public ResponseEntity<RestResponse<Object>> validationError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
         final List<FieldError> fieldErrors = result.getFieldErrors();
