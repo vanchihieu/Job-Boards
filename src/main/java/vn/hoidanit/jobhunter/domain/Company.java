@@ -3,6 +3,7 @@ package vn.hoidanit.jobhunter.domain;
 import java.time.Instant;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,7 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotBlank(message = "name không được để trống")
     private String name;
 
     @Column(columnDefinition = "MEDIUMTEXT")
