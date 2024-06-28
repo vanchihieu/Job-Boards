@@ -18,7 +18,7 @@ public class UserDetailsCustom implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { // để lấy thông tin về người dùng và so sánh với thông tin đăng nhập được cung cấp. Nếu thông tin hợp lệ, người dùng sẽ được xác thực thành công.
         User user = this.userService.handleGetUserByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("Username/password không hợp lệ");
