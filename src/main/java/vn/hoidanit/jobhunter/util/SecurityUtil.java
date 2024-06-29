@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 
+import com.nimbusds.jose.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -16,6 +17,9 @@ import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 import vn.hoidanit.jobhunter.domain.dto.ResLoginDTO;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 
 @Service
@@ -42,7 +46,7 @@ public class SecurityUtil {
     @Value("${chihieu.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
-    public String createAccessToken(Authentication authentication, ResLoginDTO.UserLogin dto) {
+    public String createAccessToken(String email, ResLoginDTO.UserLogin dto) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
 
@@ -57,7 +61,7 @@ public class SecurityUtil {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now) // thời gian phát hành
                 .expiresAt(validity) // thời gian hết hạn
-                .subject(authentication.getName()) // tên người dùng
+                .subject(email) // tên người dùng
                 .claim("user", dto) // thông tin khác
                 .claim("permission", listAuthority)
                 .build();
@@ -81,6 +85,22 @@ public class SecurityUtil {
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
 
+    }
+
+    private SecretKey getSecretKey() {
+        byte[] keyBytes = Base64.from(jwtKey).decode();
+        return new SecretKeySpec(keyBytes, 0, keyBytes.length, JWT_ALGORITHM.getName());
+    }
+
+    public Jwt checkValidRefreshToken(String token) {
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(
+                getSecretKey()).macAlgorithm(SecurityUtil.JWT_ALGORITHM).build();
+        try {
+            return jwtDecoder.decode(token);
+        } catch (Exception e) {
+            System.out.println(">>> Refresh Token error: " + e.getMessage());
+            throw e;
+        }
     }
 
     /**
