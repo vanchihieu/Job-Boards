@@ -17,8 +17,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
-import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
 
@@ -45,11 +43,11 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/", "/api/v1/login").permitAll()
+                                .requestMatchers("/", "/api/v1/auth/login").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
-                        .authenticationEntryPoint(customAuthenticationEntryPoint)) // dùng để xác thực token
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)) // dùng để xác thực token =>có token mới vào được, viết thêm jwtDecoder() để decode token
 
 //                .exceptionHandling(
 //                        exceptions -> exceptions
@@ -65,7 +63,7 @@ public class SecurityConfiguration {
     public JwtAuthenticationConverter jwtAuthenticationConverter() { // khi decode thành công
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         grantedAuthoritiesConverter.setAuthorityPrefix("");
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("chihieu");
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("permission"); // lấy thông tin từ claim permission nạp vào authorities để sử dụng hasAuthority
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);

@@ -2,6 +2,8 @@ package vn.hoidanit.jobhunter.util;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -18,7 +20,7 @@ import vn.hoidanit.jobhunter.domain.dto.ResLoginDTO;
 
 @Service
 public class SecurityUtil {
-//    JWT được cấu tạo từ 3 thành phần: header.payload.signature
+    //    JWT được cấu tạo từ 3 thành phần: header.payload.signature
 //    1. header => encode dưới dạng base64
 //    2. payload (thông tin data chứa trong token) => encode dưới dạng base64
 //    3. Signature (chữ ký) => được tạo nên từ thuật toán mã hóa + (header + payload) + key
@@ -40,18 +42,25 @@ public class SecurityUtil {
     @Value("${chihieu.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
-    public String createAccessToken(Authentication authentication) {
+    public String createAccessToken(Authentication authentication, ResLoginDTO.UserLogin dto) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
+
+        // hardcode permission (for testing)
+        List<String> listAuthority = new ArrayList<String>();
+
+        listAuthority.add("ROLE_USER_CREATE");
+        listAuthority.add("ROLE_USER_UPDATE");
 
         // @formatter:off
         // pauload của JWT
         JwtClaimsSet claims = JwtClaimsSet.builder()
-            .issuedAt(now) // thời gian phát hành
-            .expiresAt(validity) // thời gian hết hạn
-            .subject(authentication.getName()) // tên người dùng
-            .claim("chihieu", authentication) // thông tin khác
-            .build();
+                .issuedAt(now) // thời gian phát hành
+                .expiresAt(validity) // thời gian hết hạn
+                .subject(authentication.getName()) // tên người dùng
+                .claim("user", dto) // thông tin khác
+                .claim("permission", listAuthority)
+                .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
