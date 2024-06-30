@@ -1,6 +1,8 @@
 package vn.hoidanit.jobhunter.domain;
 
 import java.time.Instant;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.*;
@@ -28,7 +30,6 @@ public class Company {
 
     private String logo;
 
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant createdAt;
 
     private Instant updatedAt;
@@ -36,6 +37,9 @@ public class Company {
     private String createdBy;
 
     private String updatedBy;
+
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+    List<User> users;
 
     @PrePersist // Được gọi trước khi entity được persisted
     public void handleBeforeCreate() {
