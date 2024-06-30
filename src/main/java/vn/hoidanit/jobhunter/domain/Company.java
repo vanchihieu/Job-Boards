@@ -3,8 +3,7 @@ package vn.hoidanit.jobhunter.domain;
 import java.time.Instant;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -39,6 +38,7 @@ public class Company {
     private String updatedBy;
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+    @JsonIgnore // Để tránh lỗi vòng lặp vô hạn khi chuyển đổi sang JSON
     List<User> users;
 
     @PrePersist // Được gọi trước khi entity được persisted
