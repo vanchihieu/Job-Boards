@@ -1,4 +1,4 @@
-package vn.hoidanit.jobhunter.service;
+package vn.hoidanit.jobhunter.config;
 
 import java.util.Collections;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import vn.hoidanit.jobhunter.domain.User;
+import vn.hoidanit.jobhunter.service.UserService;
 
 @Component("userDetailsService") // đang ghi đè lên bean mặc định của Spring Security là UserDetailsService (Java nó sẽ tự động hiểu viết hoa chữ cái đầu tiên của tên class)
 public class UserDetailsCustom implements UserDetailsService {
