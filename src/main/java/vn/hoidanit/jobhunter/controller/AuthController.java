@@ -30,6 +30,7 @@ public class AuthController {
 
     @Value("${chihieu.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
+
     public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder,
                           SecurityUtil securityUtil, UserService userService) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
@@ -56,10 +57,13 @@ public class AuthController {
             ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
                     currentUserDB.getId(),
                     currentUserDB.getEmail(),
-                    currentUserDB.getName());
+                    currentUserDB.getName(),
+                    currentUserDB.getRole());
             res.setUser(userLogin);
         }
-        String access_token = this.securityUtil.createAccessToken(authentication.getName(), res.getUser());
+
+        // create access token
+        String access_token = this.securityUtil.createAccessToken(authentication.getName(), res);
         res.setAccessToken(access_token);
 
         // create refresh token
@@ -97,6 +101,8 @@ public class AuthController {
             userLogin.setId(currentUserDB.getId());
             userLogin.setEmail(currentUserDB.getEmail());
             userLogin.setName(currentUserDB.getName());
+            userLogin.setRole(currentUserDB.getRole());
+
             userGetAccount.setUser(userLogin);
         }
 
@@ -127,12 +133,14 @@ public class AuthController {
             ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
                     currentUserDB.getId(),
                     currentUserDB.getEmail(),
-                    currentUserDB.getName());
+                    currentUserDB.getName(),
+                    currentUserDB.getRole());
+
             res.setUser(userLogin);
         }
 
         // create access token
-        String access_token = this.securityUtil.createAccessToken(email, res.getUser());
+        String access_token = this.securityUtil.createAccessToken(email, res);
         res.setAccessToken(access_token);
 
         // create refresh token
