@@ -128,6 +128,11 @@ public class ResumeController {
             }
         }
 
+        /**
+         * Trong trường hợp này, filterBuilder.field("job") chỉ định rằng chúng ta muốn tạo ra một điều kiện lọc dựa trên trường "job" của đối tượng Resume.
+         * .in(filterBuilder.input(arrJobIds)) tạo ra một điều kiện IN SQL, nghĩa là nó sẽ lọc ra các Resume mà trường "job" của chúng nằm trong danh sách arrJobIds.
+         * Cuối cùng, filterSpecificationConverter.convert(...) chuyển đổi điều kiện lọc đã xây dựng thành một Specification<Resume>
+         */
         Specification<Resume> jobInSpec = filterSpecificationConverter.convert(filterBuilder.field("job")
                 .in(filterBuilder.input(arrJobIds)).get());
 
