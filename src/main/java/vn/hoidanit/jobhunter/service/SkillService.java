@@ -38,11 +38,14 @@ public class SkillService {
         return this.skillRepository.save(s);
     }
 
-    public void deleteSkill(long id) {
+    public void deleteSkill(long id) { // bởi vì skill đang có quan hệ phụ thuộc với job và subscriber nên cần xóa ở bảng trung gian trước
         // delete job (inside job_skill table)
         Optional<Skill> skillOptional = this.skillRepository.findById(id);
         Skill currentSkill = skillOptional.get();
         currentSkill.getJobs().forEach(job -> job.getSkills().remove(currentSkill));
+
+        // delete subscriber (inside subscriber_skill table)
+        currentSkill.getSubscribers().forEach(subs -> subs.getSkills().remove(currentSkill));
 
         // delete skill
         this.skillRepository.delete(currentSkill);
