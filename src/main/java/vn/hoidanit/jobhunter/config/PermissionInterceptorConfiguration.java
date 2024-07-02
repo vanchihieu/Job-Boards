@@ -13,10 +13,12 @@ public class PermissionInterceptorConfiguration implements WebMvcConfigurer {
     }
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(InterceptorRegistry registry) { // không check permission cho các api sau
         String[] whiteList = {
                 "/", "/api/v1/auth/**", "/storage/**",
-                "/api/v1/companies/**", "/api/v1/jobs/**", "/api/v1/skills/**", "/api/v1/files"
+                "/api/v1/companies/**", "/api/v1/jobs/**", "/api/v1/skills/**", "/api/v1/files",
+                "/api/v1/resumes/**",
+                "/api/v1/subscribers/**"
         };
         registry.addInterceptor(getPermissionInterceptor())
                 .excludePathPatterns(whiteList);
