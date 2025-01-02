@@ -49,7 +49,7 @@ public class AuthController {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDto.getUsername(), loginDto.getPassword());
 
-        // xác thực người dùng => cần viết hàm loadUserByUsername
+        // xác thực người dùng => cần viết hàm loadUserByUsername (config -> UserDetailsCustom)
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // set thông tin người dùng đăng nhập vào context (có thể sử dụng sau này)
@@ -74,7 +74,7 @@ public class AuthController {
         // create refresh token
         String refresh_token = this.securityUtil.createRefreshToken(loginDto.getUsername(), res);
 
-        // update user
+        // update refresh token in DB
         this.userService.updateUserToken(refresh_token, loginDto.getUsername());
 
         // set cookies
@@ -151,7 +151,7 @@ public class AuthController {
         // create refresh token
         String new_refresh_token = this.securityUtil.createRefreshToken(email, res);
 
-        // update user
+        // update refresh token in Database
         this.userService.updateUserToken(new_refresh_token, email);
 
         // set cookies

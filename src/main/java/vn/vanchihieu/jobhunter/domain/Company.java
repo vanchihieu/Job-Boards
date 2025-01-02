@@ -45,7 +45,7 @@ public class Company {
     @JsonIgnore
     List<Job> jobs;
 
-    @PrePersist // Được gọi trước khi entity được persisted
+    @PrePersist // Được gọi trước khi entity được persisted (return void và không truyền vào tham số đầu vào)
     public void handleBeforeCreate() {
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()

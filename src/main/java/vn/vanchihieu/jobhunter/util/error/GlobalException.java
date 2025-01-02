@@ -41,7 +41,7 @@ public class GlobalException {
     }
 
     @ExceptionHandler(value = {
-            NoResourceFoundException.class,
+            NoResourceFoundException.class, // ném ra khi không tìm thấy resource.
     })
     public ResponseEntity<RestResponse<Object>> handleNotFoundException(Exception ex) {
         RestResponse<Object> res = new RestResponse<Object>();

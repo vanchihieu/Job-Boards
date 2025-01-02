@@ -60,7 +60,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.GET, "/api/v1/skills/**").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
+                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()) //mục đích viết là sử dụng BearerTokenAuthenticationFilter (filter sẽ tự độngextract - lấy token từ header của request gửi lên server). Nhưng cần viết hàm jwtDecoder (giải mã)
                         .authenticationEntryPoint(customAuthenticationEntryPoint)) // dùng để xác thực token =>có token mới vào được, viết thêm jwtDecoder() để decode token
 
 //                .exceptionHandling(
@@ -73,8 +73,13 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
+    /**
+     * JwtAuthenticationConverter : convert data chứa trong token, lưu vào Spring Security Context để reuse
+     * @return
+     */
     @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter() { // khi decode thành công
+    public JwtAuthenticationConverter jwtAuthenticationConverter() { // khi decode thành công thì sẽ chuyển claim permission thành authorities để sử dụng hasAuthority trong controller (để check permission)
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         grantedAuthoritiesConverter.setAuthorityPrefix("");
         grantedAuthoritiesConverter.setAuthoritiesClaimName("permission"); // lấy thông tin từ claim permission nạp vào authorities để sử dụng hasAuthority

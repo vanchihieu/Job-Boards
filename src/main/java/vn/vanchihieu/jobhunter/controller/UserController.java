@@ -70,16 +70,17 @@ public class UserController {
                 .body(this.userService.convertToResUserDTO(users));
     }
 
-    @GetMapping("/users")
+    @GetMapping("/users") // vd: http://localhost:8080/api/v1/users?page=1&size=10&filter=email ~ 'gmail'&sort=name,asc
     @ApiMessage("fetch all users")
     public ResponseEntity<ResultPaginationDTO> getAllUsers(
             @Filter Specification<User> spec, Pageable pageable
     ) {
+        // //Lưu ý: trong Postman phải đặt đúng tên tham số là page và size để phân trang và sort để sắp xếp!
         return ResponseEntity.status(HttpStatus.OK).body(this.userService.handleGetAllUsers(spec, pageable));
     }
 
     @PutMapping("/users")
-    @ApiMessage("update user by id")
+    @ApiMessage("update user by id") // annotation được gọi trong class  FormatRestResponse
     public ResponseEntity<ResUpdateUserDTO> updateUser(@RequestBody User postManUser) throws IdInvalidException {
         User users = this.userService.handleUpdateUser(postManUser);
         if (users == null) {

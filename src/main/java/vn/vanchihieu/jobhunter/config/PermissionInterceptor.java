@@ -17,9 +17,9 @@ import vn.vanchihieu.jobhunter.util.SecurityUtil;
 import vn.vanchihieu.jobhunter.util.error.PermissionException;
 
 public class PermissionInterceptor implements HandlerInterceptor {
-//    Request => Spring Security => Interceptor => Controller => Service
+    //    Request => Spring Security => Interceptor => Controller => Service
     @Autowired
-UserService userService;
+    UserService userService;
 
     @Override
     @Transactional

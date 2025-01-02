@@ -56,11 +56,12 @@ public class UserService {
     }
 
     public ResultPaginationDTO handleGetAllUsers(Specification<User> spec, Pageable pageable) {
+        //Lưu ý: trong Postman phải đặt đúng tên tham số là page và size để phân trang!
         Page<User> pageUser = this.userRepository.findAll(spec, pageable);
         ResultPaginationDTO rs = new ResultPaginationDTO();
         ResultPaginationDTO.Meta mt = new ResultPaginationDTO.Meta();
 
-        mt.setPage(pageable.getPageNumber() + 1);
+        mt.setPage(pageable.getPageNumber() + 1); // +1 tại vì pageable bắt đầu từ 0
         mt.setPageSize(pageable.getPageSize());
 
         mt.setPages(pageUser.getTotalPages());
